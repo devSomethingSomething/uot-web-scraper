@@ -1,12 +1,36 @@
-﻿using System;
+﻿using HtmlAgilityPack;
+using System;
 
 namespace UotWebScraper
 {
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        private static string url = "url";
+
+        private static void Main()
         {
-            Console.WriteLine("Hello World!");
+            HtmlWeb htmlWeb = new HtmlWeb();
+
+            HtmlDocument htmlDocument = htmlWeb.Load(url);
+
+            var nameAndSurname = htmlDocument.DocumentNode.SelectNodes("//div[@id='gsc_prf_in']");
+
+            Console.WriteLine(nameAndSurname[0].InnerText);
+
+            Console.ReadKey(true);
         }
+    }
+
+    public class User
+    {
+        public string Name { get; set; }
+
+        public string Surname { get; set; }
+
+        public int Citations { get; set; }
+
+        public int HIndex { get; set; }
+
+        public int I10Index { get; set; }
     }
 }
