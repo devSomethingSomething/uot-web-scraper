@@ -10,30 +10,36 @@ namespace UotWebScraper
 {
     public class Program
     {
-        //private static string url;
-
         private static void Main()
         {
-            IEnumerable<GSProfile> urls;
+            string url = "https://scholar.google.com/citations?user=1OyvitkAAAAJ&hl=en&oi=ao";
 
-            using (var streamReader = new StreamReader("urls.csv"))
-            {
-                using (var csvReader = new CsvReader(streamReader, CultureInfo.InvariantCulture))
-                {
-                    urls = csvReader.GetRecords<GSProfile>().ToList();
-                }
-            }
+            //IEnumerable<GSProfile> urls;
 
-            foreach (var url in urls)
-            {
-                Console.WriteLine(url.Url);
-            }
+            //using (var streamReader = new StreamReader("urls.csv"))
+            //{
+            //    using (var csvReader = new CsvReader(streamReader, CultureInfo.InvariantCulture))
+            //    {
+            //        urls = csvReader.GetRecords<GSProfile>().ToList();
+            //    }
+            //}
 
-            //HtmlWeb htmlWeb = new HtmlWeb();
+            //foreach (var url in urls)
+            //{
+            //    Console.WriteLine(url.Url);
+            //}
 
-            //HtmlDocument htmlDocument = htmlWeb.Load(url);
+            HtmlWeb htmlWeb = new HtmlWeb();
 
-            //var nameAndSurname = htmlDocument.DocumentNode.SelectNodes("//div[@id='gsc_prf_in']");
+            HtmlDocument htmlDocument = htmlWeb.Load(url);
+
+            var nameAndSurname = htmlDocument.DocumentNode.SelectNodes("//div[@id='gsc_prf_in']");
+
+            var citations = htmlDocument.DocumentNode.SelectNodes("//table[@id='gsc_rsb_st']/tbody/tr[1]/td[2]");
+
+            var hIndex = htmlDocument.DocumentNode.SelectNodes("//table[@id='gsc_rsb_st']/tbody/tr[2]/td[2]");
+
+            var i10Index = htmlDocument.DocumentNode.SelectNodes("//table[@id='gsc_rsb_st']/tbody/tr[3]/td[2]");
 
             //using (var streamWriter = new StreamWriter("test.csv"))
             //{
@@ -43,9 +49,15 @@ namespace UotWebScraper
             //    }
             //}
 
-            //Console.WriteLine(nameAndSurname[0].InnerText);
+            Console.WriteLine(nameAndSurname[0].InnerText);
 
-            //Console.WriteLine("Success");
+            Console.WriteLine(citations[0].InnerText);
+
+            Console.WriteLine(hIndex[0].InnerText);
+
+            Console.WriteLine(i10Index[0].InnerText);
+
+            Console.WriteLine("Success");
 
             Console.ReadKey(true);
         }
