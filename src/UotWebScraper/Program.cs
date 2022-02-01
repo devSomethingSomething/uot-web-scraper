@@ -12,7 +12,11 @@ namespace UotWebScraper
     {
         private static void Main()
         {
+            // Temp URL, should be read from a file
             string url = "https://scholar.google.com/citations?user=1OyvitkAAAAJ&hl=en&oi=ao";
+
+            // Will hold a list of users with data from GS
+            var users = new List<User>();
 
             //IEnumerable<GSProfile> urls;
 
@@ -41,13 +45,28 @@ namespace UotWebScraper
 
             var i10Index = htmlDocument.DocumentNode.SelectNodes("//table[@id='gsc_rsb_st']/tbody/tr[3]/td[2]");
 
-            //using (var streamWriter = new StreamWriter("test.csv"))
-            //{
-            //    using (var csvWriter = new CsvWriter(streamWriter, CultureInfo.InvariantCulture))
-            //    {
-            //        csvWriter.WriteField(nameAndSurname[0].InnerText);
-            //    }
-            //}
+            var name = nameAndSurname[0].InnerText.Split(" ").First();
+
+            var surname = nameAndSurname[0].InnerText.Split(" ").Last();
+
+            users.Add(new User()
+            {
+                Name = name,
+                Surname = surname,
+                Citations = Convert.ToInt32(citations[0].InnerText),
+                HIndex = Convert.ToInt32(hIndex[0].InnerText),
+                I10Index = Convert.ToInt32(i10Index[0].InnerText)
+            });
+
+            using (var streamWriter = new StreamWriter("users.csv"))
+            {
+                using (var csvWriter = new CsvWriter(streamWriter, CultureInfo.InvariantCulture))
+                {
+                    //csvWriter.WriteField(nameAndSurname[0].InnerText);
+
+                    csvWriter.WriteRecords(users);
+                }
+            }
 
             Console.WriteLine(nameAndSurname[0].InnerText);
 
@@ -80,9 +99,9 @@ namespace UotWebScraper
 
         public int I10Index { get; set; }
 
-        public override string ToString()
-        {
-            return $"{Name},{Surname}";
-        }
+        //public override string ToString()
+        //{
+        //    return $"{Name},{Surname}";
+        //}
     }
 }
